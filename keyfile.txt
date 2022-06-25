@@ -1,0 +1,13 @@
+Name String
+Age Int
+Class Int
+Height Float
+Sex String
+Score Int
+Address String
+Food String
+Best_Friend String
+School String 
+Church String
+Facebook_Name String
+Special_Number Float

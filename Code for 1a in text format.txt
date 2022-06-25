@@ -1,0 +1,76 @@
+import random, string
+import json
+letters = string.ascii_lowercase
+
+def createData(filename,numberOfDictionary,levelOfNesting,lengthOfValue,numberOfKeys):
+    sampleData = []
+    file = open(filename,"r")
+    for line in file:
+        splitline = line.split(" ")
+        sampleName = splitline[0].strip()
+        sampleDataType= splitline[1].strip()
+        sample = {sampleName:sampleDataType}
+        sampleData.append(sample)
+    file.close()
+    dataArray=[]
+    data={}  
+    min = pow(10, random.randint(1,lengthOfValue)-1)
+    max = pow(10, random.randint(1,lengthOfValue)) - 1              
+    for i in range(1,numberOfDictionary+1):
+        innerObject = {}
+        for j in range(0,random.randint(1,numberOfKeys)):
+            InnerKey = ""
+            innerValue = ""
+            for key, value in sampleData[j].items():
+                innerKey = key
+                #innerValue = "Vitalis" 
+                #print(innerKey)
+                if levelOfNesting == 0:
+                    if value == "String":
+                        innerValue = ''.join(random.choice(letters) for i in range(random.randint(1,lengthOfValue)))
+                    elif value == "Int":
+                        innerValue =  random.randint(min,max) 
+                    else:
+                        innerValue =  round(random.uniform(1.2,1.9),random.randint(1,lengthOfValue-1))
+                else: 
+                    innerObjectLoop ={}
+                    for w in range(0, random.randint(1,random.randint(1,numberOfKeys))):
+                        innerObjectKey = ''.join(random.choice(letters) for w in range(random.randint(1,lengthOfValue)))
+                        if value == "String":
+                            innerObjectValue = ''.join(random.choice(letters) for w in range(random.randint(1,lengthOfValue)))
+                        elif value == "Int":
+                             innerObjectValue = random.randint(min, max)
+                        else :
+                            innerObjectValue = round(random.uniform(1.2,1.9),random.randint(1,lengthOfValue-1))   
+                        temp = {innerObjectKey:innerObjectValue}
+                        innerObjectLoop.update(temp)
+                    #print(innerObjectLoop)
+                    outerObject = ""
+                    #construct the inner object
+                    for x in range(0,random.randint(1,numberOfKeys)):
+                        tempObjectn ={innerObjectKey:innerObjectValue}
+                        innerObjectLoop.update(tempObjectn)
+                    #construct the nesting level
+                    for x in range(1,random.randint(0,levelOfNesting)):
+                    
+                        outerObject = {}
+                        for m in range(0,random.randint(1,numberOfKeys)):   
+                            innerObjectKey = ''.join(random.choice(letters) for i in range(random.randint(1,lengthOfValue)))
+                            temp = {innerObjectKey:innerObjectLoop}
+                            outerObject.update(temp)
+                        innerObjectLoop = outerObject
+                    innerValue = innerObjectLoop                    
+                tempObject ={innerKey:innerValue}
+                innerObject.update(tempObject)
+                person = {"person"+str(i):innerObject}      
+        dataArray.append(person)
+    with open('dataToIndex.txt', 'w') as outfile:
+        json.dump(dataArray, outfile)
+    return dataArray
+
+for i in range(4):
+    try:
+        print(createData("keyfile.txt",100,4 ,4 ,4))
+        break
+    except:
+        pass
